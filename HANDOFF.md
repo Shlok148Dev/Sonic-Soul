@@ -6,10 +6,10 @@
 ## Current State
 - **Date**: 2026-04-10
 - **Phase**: Week 1, Day 1 — Repository Foundation COMPLETE
-- **Last Completed**: Full monorepo scaffolded, committed, pushed to GitHub
-- **Currently Working On**: Next → Week 1, Days 3-5 (Data Pipeline)
+- **Last Completed**: B0-B4 baselines and Data Pipeline skeleton completed
+- **Currently Working On**: Implementing MERT/CLAP embedding steps in run_pipeline.py while FMA-small downloads.
 - **Branch**: `main`
-- **Git Commit**: b8caff3
+- **Git Commit**: b957d62
 
 ## What Has Been Done
 1. ✅ Read both PSYCHE_ULTIMATE_MASTERPLAN.md and PSYCHE_DEVELOPMENT_GUIDE.md fully

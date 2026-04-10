@@ -80,8 +80,13 @@ _start_time = time.time()
 async def startup():
     """Initialize orchestrator and agents on startup."""
     logger.info("PSYCHE API starting up...")
-    # TODO: Initialize PsycheMetaOrchestrator with all agents
-    # This will be wired in Week 7
+    from psyche.registry import build_orchestrator
+    try:
+        app.state.orchestrator = build_orchestrator()
+        logger.info("Orchestrator successfully initialized.")
+    except Exception as e:
+        logger.error(f"Failed to initialize orchestrator: {e}")
+        app.state.orchestrator = None
 
 
 # --- Endpoints ---
@@ -90,9 +95,12 @@ async def startup():
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """System health check — returns all agent statuses."""
+    agents_status = {}
+    if getattr(app.state, "orchestrator", None):
+        agents_status = app.state.orchestrator.health()
     return HealthResponse(
-        status="healthy",
-        agents={},  # TODO: Wire orchestrator.health()
+        status="healthy" if agents_status else "degraded",
+        agents=agents_status,
         uptime_seconds=time.time() - _start_time,
     )
 
@@ -112,13 +120,23 @@ async def recommend(request: RecommendRequest):
 @app.post("/cold-start/message")
 async def cold_start_message(request: ColdStartMessageRequest):
     """Process a cold start interview message."""
-    # TODO: Wire to ColdStartPsychographicAgent
-    return {
-        "next_question": None,
-        "radar_delta": {},
-        "agent_response": "Cold start agent not yet initialized.",
-        "interview_complete": False,
-    }
+    if not getattr(app.state, "orchestrator", None) or "cold_start" not in app.state.orchestrator._agents:
+        return {
+            "next_question": None,
+            "radar_delta": {},
+            "agent_response": "Cold start agent not available.",
+            "interview_complete": False,
+        }
+    
+    agent = app.state.orchestrator._agents["cold_start"]
+    try:
+        response = await agent.infer(
+            turn=request.turn, user_answer=request.user_answer, user_id=request.user_id
+        )
+        return response
+    except Exception as e:
+        logger.error(f"Cold Start inference failed: {e}")
+        return agent.fallback(turn=request.turn)
 
 
 @app.get("/explain/{track_id}")
@@ -153,15 +171,26 @@ async def ws_listener_state(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-            # TODO: Wire to ESIE real-time updates
-            await websocket.send_json({
+            state = {
                 "valence": 0.0,
                 "arousal": 0.0,
                 "focus": 0.5,
                 "social_mode": 0.2,
                 "confidence": 0.0,
                 "method": "not_initialized",
-            })
+            }
+            if getattr(app.state, "orchestrator", None) and "esie" in app.state.orchestrator._agents:
+                agent = app.state.orchestrator._agents["esie"]
+                try:
+                    # In a real app, signals would be retrieved from db/cache for the user
+                    result = await agent.infer()
+                    state = result.model_dump()
+                except Exception as e:
+                    logger.error(f"ESIE inference failed: {e}")
+                    result = agent.fallback()
+                    state = result.model_dump()
+            
+            await websocket.send_json(state)
             await asyncio.sleep(90)
     except WebSocketDisconnect:
         logger.info("Listener state WebSocket disconnected")
