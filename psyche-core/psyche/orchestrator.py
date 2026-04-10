@@ -100,6 +100,17 @@ class PsycheMetaOrchestrator:
         # Collect all candidate track IDs with scores
         scored: Dict[str, float] = {}
 
+        # Extract fairness Gini coefficient for Meta-Balancing
+        fairness_output = results.get("fairness_rl")
+        if fairness_output is not None and fairness_output.get("result"):
+            gini = fairness_output["result"].get("gini_coefficient", 0.0)
+            if gini > 0.4:
+                logger.debug(f"High artist Gini ({gini:.2f}) detected. Orchestrator suppressing Popularity weights +50%.")
+                if "popularity" in weights:
+                    weights["popularity"] *= 0.5
+                if "fairness_rl" in weights:
+                    weights["fairness_rl"] *= 1.5
+
         for agent_name, result in results.items():
             if result is None or result.get("result") is None:
                 continue
