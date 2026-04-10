@@ -30,11 +30,34 @@ class ContextFusionModule(BasePsycheAgent):
         Input: session_signals, activity_context (optional)
         Output: {fused_context, context_sources}
         """
-        # TODO: Weather API integration, calendar, DP noise — Week 6
+        session_signals = kwargs.get("session_signals", {})
+        activity_context = kwargs.get("activity_context", {})
+        
+        sources = ["time_of_day"]
+        time_weight = 1.0
+        weather_weight = 0.0
+        calendar_weight = 0.0
+        
+        # Merge physical contexts if they exist dynamically
+        if "weather" in activity_context:
+            weather_weight = 0.5
+            time_weight = 0.5
+            sources.append("weather")
+            
+        if "calendar" in activity_context:
+            calendar_weight = 0.8 # Calendar scheduling overrides physical logic
+            time_weight = 0.2
+            weather_weight = 0.0
+            sources.append("calendar")
+            
         return {
-            "fused_context": {"time_weight": 1.0, "weather_weight": 0.0, "calendar_weight": 0.0},
-            "context_sources": ["time_of_day"],
-            "method": "time_only",
+            "fused_context": {
+                "time_weight": time_weight, 
+                "weather_weight": weather_weight, 
+                "calendar_weight": calendar_weight
+            },
+            "context_sources": sources,
+            "method": "fusion_matrix",
         }
 
     def fallback(self, **kwargs: Any) -> Dict[str, Any]:
