@@ -108,6 +108,15 @@ class APIConfig(BaseModel):
     cors_origins: List[str] = ["http://localhost:3000"]
 
 
+class DatabaseConfig(BaseModel):
+    """Supabase and Upstash Redis configurations."""
+    
+    supabase_url: str = "${SUPABASE_URL}"
+    supabase_key: str = "${SUPABASE_ANON_KEY}"
+    upstash_redis_rest_url: str = "${UPSTASH_REDIS_URL}"
+    upstash_redis_rest_token: str = "${UPSTASH_REDIS_TOKEN}"
+
+
 class OrchestratorConfig(BaseModel):
     """Meta-orchestrator configuration."""
 
@@ -134,6 +143,7 @@ class PsycheConfig(BaseModel):
     faiss: FAISSConfig = FAISSConfig()
     pipelines: PipelineConfig = PipelineConfig()
     api: APIConfig = APIConfig()
+    db: DatabaseConfig = DatabaseConfig()
     orchestrator: OrchestratorConfig = OrchestratorConfig()
 
     @classmethod
