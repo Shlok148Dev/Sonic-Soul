@@ -1,0 +1,33 @@
+language: "en-US"
+reviews:
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!data/**"
+    - "!notebooks/**"
+    - "!*.dvc"
+
+instructions: |
+  This is PSYCHE, a multi-agent music intelligence platform (Python ML + FastAPI + Next.js).
+  
+  ALWAYS flag:
+  - Hardcoded values that should be in configs/config.yaml
+  - Missing type hints on public functions/methods
+  - Missing W&B logging on agent inference code
+  - Agents not extending BasePsycheAgent from psyche/agents/base.py
+  - Missing fallback() method on any agent class
+  - DVC data files not tracked
+  - Missing docstrings on class definitions
+  - try/except without logging (silent failures = bugs)
+  - asyncio.gather() without return_exceptions=True
+  - Secrets or API keys in code (must come from env vars)
+  - Missing Pydantic validation on API endpoints
+  
+  IGNORE:
+  - Minor variable naming preferences
+  - Comment formatting
+  - Import ordering (isort handles this)

@@ -1,0 +1,141 @@
+# ================================================================
+# PSYCHE Configuration — Single Source of Truth
+# All agent params, model names, thresholds, and paths live here.
+# NEVER hardcode these values in code.
+# ================================================================
+
+# --- Supabase (User Data Store) ---
+supabase:
+  url: "${SUPABASE_URL}"
+  anon_key: "${SUPABASE_ANON_KEY}"
+
+# --- Cache (Upstash Redis) ---
+cache:
+  upstash_url: "${UPSTASH_REDIS_URL}"
+  upstash_token: "${UPSTASH_REDIS_TOKEN}"
+  explanation_ttl: 3600
+
+# --- ESIE (Emotional State Inference Engine) ---
+esie:
+  ollama_model: "llama3.1:8b"
+  ollama_host: "http://localhost:11434"
+  update_interval_seconds: 90
+  fallback_strategy: "time_heuristic"
+
+# --- Cold Start Psychographic Agent ---
+cold_start:
+  ollama_model: "llama3.1:8b"
+  num_questions: 5
+  clap_model: "laion/larger_clap_general"
+
+# --- Micro-Event Attribution Engine ---
+micro_event:
+  demucs_model: "htdemucs"
+  segment_duration_seconds: 8
+  min_energy_threshold: 0.01
+
+# --- Serendipity Agent ---
+serendipity:
+  max_similarity: 0.85
+  min_similarity: 0.20
+  k_candidates: 100
+  novelty_sweet_spot: [0.35, 0.75]
+
+# --- Fairness-Aware RL Recommender ---
+fairness:
+  reward_alpha: 0.7          # engagement weight
+  reward_beta: 0.2           # artist diversity weight
+  reward_gamma: 0.1          # geographic spread weight
+  underrepresented_regions_exclude: ["US", "UK", "SE", "CA", "AU"]
+  ppo_policy: "MlpPolicy"
+  ppo_net_arch: [256, 256]
+  ppo_total_timesteps: 500000
+  ppo_checkpoint_interval: 50000
+
+# --- Playlist Coherence Architect ---
+coherence:
+  model_name: "psyche-coherence-transformer"
+  max_playlist_length: 100
+  energy_smoothing_window: 5
+  key_compatibility_weight: 0.3
+
+# --- Context Fusion Module ---
+context_fusion:
+  weather_api_key: "${OPENWEATHER_API_KEY}"
+  dp_epsilon: 1.0
+  dp_delta: 1e-5
+  calendar_enabled: false
+
+# --- Content Integrity Guardian ---
+integrity:
+  risk_threshold: 0.85
+  ai_generation_threshold: 0.70
+  toxicity_threshold: 0.50
+  classifier_path: "data/models/integrity_classifier.pt"
+
+# --- Temporal Taste GRU ---
+temporal_taste:
+  hidden_size: 256
+  num_layers: 2
+  half_life_days: 180
+  attention_heads: 4
+
+# --- Sonic Explainability Agent (SEA) ---
+sea:
+  ollama_model: "llama3.1:8b"
+  max_explanation_tokens: 150
+  retrieval_k: 5
+
+# --- Intent Classifier ---
+intent_classifier:
+  passive_skip_threshold: 0
+  passive_session_minutes: 30
+  background_time_ranges: [[23, 6]]
+
+# --- Rumination Guard ---
+rumination_guard:
+  valence_decline_threshold: -0.3
+  window_minutes: 45
+  arousal_floor: -0.5
+  intervention_mode: "opt_in"
+
+# --- FAISS Indexes ---
+faiss:
+  mert_index_path: "data/features/mert_index.faiss"
+  mert_id_map_path: "data/features/mert_id_map.json"
+  clap_index_path: "data/features/clap_index.faiss"
+  clap_id_map_path: "data/features/clap_id_map.json"
+
+# --- Data Pipelines ---
+pipelines:
+  sample_rate: 22050
+  audio_duration: 30
+  max_workers: 4
+  checkpoint_interval: 100
+  mfcc_coefficients: 40
+  mert_sample_rate: 24000
+  clap_sample_rate: 48000
+
+# --- API ---
+api:
+  host: "0.0.0.0"
+  port: 8000
+  latency_target_p95_ms: 200
+  api_key: "${PSYCHE_API_KEY}"
+  cors_origins: ["http://localhost:3000", "https://psyche.fm"]
+
+# --- Orchestrator ---
+orchestrator:
+  base_weights:
+    fairness_rl: 0.30
+    serendipity: 0.25
+    coherence: 0.25
+    clap_similarity: 0.20
+  high_arousal_coherence_boost: 1.3
+  high_focus_serendipity_penalty: 0.6
+  low_confidence_similarity_boost: 1.4
+
+# --- W&B ---
+wandb:
+  project: "psyche"
+  entity: "${WANDB_ENTITY}"

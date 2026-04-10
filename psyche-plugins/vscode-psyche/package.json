@@ -1,0 +1,56 @@
+{
+    "name": "psyche-music",
+    "displayName": "PSYCHE Music Intelligence",
+    "description": "Context-aware music recommendations that adapt to your coding state",
+    "version": "0.1.0",
+    "publisher": "psyche-music",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": ["Other"],
+    "activationEvents": ["onStartupFinished"],
+    "main": "./out/extension.js",
+    "contributes": {
+        "configuration": {
+            "title": "PSYCHE",
+            "properties": {
+                "psyche.apiUrl": {
+                    "type": "string",
+                    "default": "http://localhost:8000",
+                    "description": "PSYCHE API URL"
+                },
+                "psyche.updateIntervalSeconds": {
+                    "type": "number",
+                    "default": 90,
+                    "description": "How often to update recommendations (seconds)"
+                },
+                "psyche.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable PSYCHE extension"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "psyche.showSidebar",
+                "title": "PSYCHE: Show Sidebar"
+            },
+            {
+                "command": "psyche.refresh",
+                "title": "PSYCHE: Refresh Recommendations"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./tsconfig.json",
+        "watch": "tsc -watch -p ./tsconfig.json",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.85.0",
+        "@types/node": "^20.0.0",
+        "typescript": "^5.3.0",
+        "@vscode/vsce": "^2.22.0"
+    }
+}

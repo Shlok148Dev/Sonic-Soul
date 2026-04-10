@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "psyche-core"
+version = "0.1.0"
+description = "Multi-agent music intelligence platform — the engine that replaces Spotify, Apple Music, and YouTube Music recommendations."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Shlok Dholakia", email = "shlok@psyche.fm"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+keywords = ["music", "recommendation", "AI", "agents", "reinforcement-learning", "explainability"]
+dependencies = [
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "pyyaml>=6.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "librosa>=0.10.0",
+    "soundfile>=0.12.0",
+    "faiss-cpu>=1.7.4",
+    "torch>=2.0.0",
+    "transformers>=4.35.0",
+    "wandb>=0.15.0",
+    "httpx>=0.24.0",
+    "tqdm>=4.65.0",
+    "scikit-learn>=1.3.0",
+]
+
+[project.optional-dependencies]
+all = [
+    "demucs>=4.0.0",
+    "laion-clap>=1.1.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "stable-baselines3>=2.1.0",
+    "gymnasium>=0.29.0",
+    "implicit>=0.7.0",
+    "diffprivlib>=0.6.0",
+    "rapidfuzz>=3.0.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "ruff>=0.1.0",
+]
+api = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "python-multipart>=0.0.6",
+    "websockets>=12.0",
+    "supabase>=2.0.0",
+    "upstash-redis>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://psyche.fm"
+Repository = "https://github.com/Shlok148Dev/Sonic-Soul"
+Documentation = "https://github.com/Shlok148Dev/Sonic-Soul#readme"
+Issues = "https://github.com/Shlok148Dev/Sonic-Soul/issues"
+
+[project.scripts]
+psyche-bench = "psyche_bench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["psyche-core"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["psyche-core/tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

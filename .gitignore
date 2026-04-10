@@ -1,0 +1,114 @@
+# ============================
+# PSYCHE Monorepo .gitignore
+# Python ML + Node.js + Docker
+# ============================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+*.whl
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# --- Data (DVC-managed, never in git) ---
+data/raw/fma_small/
+data/raw/fma_metadata/
+data/raw/fma_medium/
+data/raw/lfm-1b/
+data/raw/mpd/
+data/raw/audioset/
+data/validated/fma_small/
+data/features/*.parquet
+data/features/*.npz
+data/features/*.faiss
+data/features/*.json
+data/features/stems/
+data/models/*.zip
+data/models/*.pt
+data/models/*.pth
+data/models/*.onnx
+data/quarantine/
+!data/**/.gitkeep
+!data/raw/.gitkeep
+!data/validated/.gitkeep
+!data/features/.gitkeep
+!data/splits/.gitkeep
+!data/models/.gitkeep
+!data/quarantine/.gitkeep
+!data/evaluation/.gitkeep
+!data/user_profiles/.gitkeep
+
+# --- ML/DL Artifacts ---
+*.h5
+*.hdf5
+wandb/
+mlruns/
+lightning_logs/
+*.ckpt
+
+# --- Secrets & Environment ---
+.env
+.env.local
+.env.production
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- Node.js (psyche-ui, psyche-plugins) ---
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+.vercel/
+.netlify/
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- Testing ---
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Ralph Loop ---
+.ralph_progress.txt
+progress_*.txt
+
+# --- DVC ---
+# Track .dvc files, not actual data
+!*.dvc
+!.dvc/
+
+# --- Misc ---
+*.log
+*.bak
+*.tmp
+.planning/
+*.zip
+*.tar.gz
