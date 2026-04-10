@@ -116,6 +116,14 @@ class PsycheMetaOrchestrator:
                 continue
 
             agent_out = result["result"]
+            if hasattr(agent_out, "model_dump"):
+                agent_out = agent_out.model_dump()
+            elif hasattr(agent_out, "dict"):
+                agent_out = agent_out.dict()
+            
+            if not isinstance(agent_out, dict):
+                continue
+                
             weight = weights.get(agent_name, 0.1)
 
             track_ids = agent_out.get("track_ids", [])

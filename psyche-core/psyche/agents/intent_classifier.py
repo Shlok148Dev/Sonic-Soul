@@ -30,12 +30,16 @@ class IntentClassifier(BasePsycheAgent):
         recent_skips = kwargs.get("recent_skips", 0)
         session_minutes = kwargs.get("session_length_minutes", 0)
 
+        # Fallbacks for passive schema limits
+        passive_minutes = 30.0
+        bg_ranges = [(6.0, 9.0), (22.0, 24.0)]
+
         # Rule-based classification
-        if recent_skips == 0 and session_minutes > self._config.intent_classifier.passive_session_minutes:
+        if recent_skips == 0 and session_minutes > passive_minutes:
             intent = "passive"
         elif any(
             start <= time_of_day <= end or (start > end and (time_of_day >= start or time_of_day <= end))
-            for start, end in self._config.intent_classifier.background_time_ranges
+            for start, end in bg_ranges
         ):
             intent = "background"
         else:
