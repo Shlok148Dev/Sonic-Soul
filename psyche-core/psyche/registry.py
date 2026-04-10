@@ -44,7 +44,7 @@ def build_orchestrator(config: PsycheConfig | None = None) -> PsycheMetaOrchestr
         logger.warning(f"Failed to load Fairness RL: {e}")
 
     try:
-        from psyche.agents.sea import SonicExplainabilityAgent
+        from psyche.agents.explainability import SonicExplainabilityAgent
         agents_to_register.append(SonicExplainabilityAgent(config=cfg))
     except Exception as e:
         logger.warning(f"Failed to load SEA: {e}")

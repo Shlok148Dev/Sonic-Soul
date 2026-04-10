@@ -37,7 +37,7 @@ class TestOrchestratorIntegration:
         from psyche.registry import build_orchestrator
         o = build_orchestrator()
         expected = {
-            "esie", "cold_start", "fairness_rl", "sea", "serendipity",
+            "esie", "cold_start", "fairness_rl", "explainability", "serendipity",
             "coherence", "content_integrity", "micro_event",
             "temporal_taste", "context_fusion", "intent_classifier",
             "rumination_guard",

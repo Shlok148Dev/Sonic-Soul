@@ -77,6 +77,23 @@ class FairnessConfig(BaseModel):
     ppo_checkpoint_interval: int = 50000
 
 
+class SerendipityConfig(BaseModel):
+    """Serendipity / Novelty configurations."""
+    k_candidates: int = 100
+    novelty_sweet_spot: List[float] = [0.35, 0.75]
+
+
+class IntegrityConfig(BaseModel):
+    """Content Integrity constraints."""
+    toxicity_threshold: float = 0.8
+    ai_generated_threshold: float = 0.9
+
+
+class ExplainabilityConfig(BaseModel):
+    """Sonic Explainability Agent (SEA) configurations."""
+    ollama_model: str = "llama3.1:8b"
+
+
 class FAISSConfig(BaseModel):
     """FAISS index paths configuration."""
 
@@ -145,6 +162,9 @@ class PsycheConfig(BaseModel):
     api: APIConfig = APIConfig()
     db: DatabaseConfig = DatabaseConfig()
     orchestrator: OrchestratorConfig = OrchestratorConfig()
+    serendipity: SerendipityConfig = SerendipityConfig()
+    integrity: IntegrityConfig = IntegrityConfig()
+    explainability: ExplainabilityConfig = ExplainabilityConfig()
 
     @classmethod
     def from_yaml(cls, config_path: Optional[str] = None) -> "PsycheConfig":

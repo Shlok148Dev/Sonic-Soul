@@ -30,17 +30,34 @@ class ContentIntegrityGuardian(BasePsycheAgent):
         Evaluate a track's content integrity.
         Input: track_id (str), audio_path (str, optional), metadata (dict)
         """
-        track_id = kwargs["track_id"]
+        track_id = kwargs.get("track_id", "unknown")
+        metadata = kwargs.get("metadata", {})
+        
+        # Phase 5 NLP Basic Text Safety Classification (Heuristics until CLAP integration)
+        toxic_keywords = ["hate", "kill", "murder", "racist"]
+        ai_keywords = ["suno", "udio", "generated", "ai cover"]
+        
+        title = str(metadata.get("title", "")).lower()
+        artist = str(metadata.get("artist", "")).lower()
+        
+        is_toxic = sum(1 for w in toxic_keywords if w in title or w in artist) > 0
+        is_ai = sum(1 for w in ai_keywords if w in title or w in artist) > 0
+        
+        toxicity_score = 1.0 if is_toxic else 0.0
+        ai_score = 1.0 if is_ai else 0.0
+        
+        passed = True
+        if toxicity_score >= self._config.integrity.toxicity_threshold:
+            passed = False
+        if ai_score >= self._config.integrity.ai_generated_threshold:
+            passed = False
 
-        # TODO: Load fine-tuned CLAP classifier for AI detection
-        # TODO: Load toxicity classifier
-        # For now, pass all tracks (classifier loading in Week 5)
         return IntegrityScore(
             track_id=track_id,
-            ai_generated=0.0,
-            toxic=0.0,
+            ai_generated=ai_score,
+            toxic=toxicity_score,
             spoofed=0.0,
-            passed=True,
+            passed=passed,
         )
 
     def fallback(self, **kwargs: Any) -> IntegrityScore:
